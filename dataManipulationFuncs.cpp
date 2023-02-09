@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <cmath>
+
 using namespace std;
 
 
@@ -17,17 +19,54 @@ using namespace std;
  */
 vector<vector<double>> parseData(const string pathToFile, size_t numCol) {
     vector<vector<double>> result;
-    for(size_t i = 0; i < numCol; i++){
+    for(size_t i = 0; i < numCol; i++) {
         result.push_back(vector<double>{});
     }
 
-    ifstream ifs(pathToFile);
-    if(ifs.fail()){ 
-        cerr << "Could not open file " + pathToFile << endl;
+    ifstream csv;
+    csv.open(pathToFile);
+    if (!csv.is_open()) {
+        cerr << "ERROR: " << pathToFile << " did not open correctly";
+        exit(2);
+    } else {
+        cout << "opened file" << endl;
+    }
+
+    int i;
+    vector<double> row;
+    string line;
+    double field;
+    while (getline(csv,line)) {
+        stringstream ss(line);
+        row.clear();
+        i = 0;
+        while (ss>>field) {
+            row.push_back(field);
+            if (ss.peek() == ',') ss.ignore();
+        }
+
+        if (row.size() == numCol) {
+            for (i = 0; i < numCol; i++) {
+                result.at(i).push_back(row.at(i));
+            }
+        }
+        //cout << row.size() << endl;
+        /*if (row.size() == numCol) {  
+            cout << "Ma: " << row.at(0) << "ODelta: " << row.at(1) << " CDelta: " << row.at(2) << endl;
+            for (i = 0; i < numCol; i++) {
+                //adds values to corresponding columns
+                result.at(i).push_back(row.at(i));
+            }
+        }*/
+    }
+    csv.close();
+    if (csv.eof()) {
+        cout << "Read File Successfully" << endl;
+    } else {
+        cerr << "Error reading file" << endl;
         exit(2);
     }
-    
-    /* TODO: STUB */
+
     return result;
 }
 
@@ -46,10 +85,24 @@ vector<vector<double>> smoothData(vector<vector<double>>& rawData, size_t window
         exit(2);
     }
 
+    //creates vector<vector<double>> same size as rawData
     vector<vector<double>> result(rawData);
 
-    /* TODO: STUB */
+    cout << rawData.size() << " " << rawData.at(0).size() << endl;
+    cout << result.size() << " " << result.at(0).size() << endl;
+    cout << result.at(0).at(0) << endl;
 
+
+    double value;
+    for (int c = 0; c < rawData.size(); c++) {
+        //computing averages with standard window lengths
+        for (int i = 0; i < rawData.at(0).size(); i++) {
+            value = getAvgNextNValues(rawData.at(c),i,windowSize);
+            //cout << value << " "
+            result.at(c).at(i) = value;    
+        }
+        //cout << endl;
+    }
     return result;
 }
 
@@ -71,7 +124,17 @@ vector<vector<double>> filterData(vector<vector<double>>& rawData, int minAge, i
         result.push_back(vector<double>{});
     }
 
-    /* TODO: STUB */
+    double age; 
+    for(size_t r = 0; r < rawData.at(0).size(); r++) {
+        age = rawData.at(0).at(r);
+        if (age >= minAge && age <= maxAge) {
+            for (int c = 0; c < result.size(); c++) {
+                result.at(c).push_back(rawData.at(c).at(r));
+                //cout << rawData.at(c).at(r) << " ";
+            }
+            //cout << endl;
+        }
+    }
 
     return result;
 }
@@ -98,6 +161,30 @@ vector<vector<double>> filterData(vector<vector<double>>& rawData, int minAge, i
     avg = (4.0 + 5.5) / 2 = 9.5
  */
 double getAvgNextNValues(vector<double> const& v, size_t startIndex , size_t windowLength){ 
-    /* TODO: STUB */
-    return 0.0;
+    //cout << "Vector: " << endl;
+    
+
+    double sum = 0;
+    double result = 0;
+    if (startIndex + windowLength <= v.size()) {
+        for (int i = 0; i < windowLength; i++) {
+            sum += v.at(i+startIndex);
+        }
+        result = sum/windowLength;
+
+    } else {
+        for (int i = startIndex; i < v.size(); i++) {
+            sum += v.at(i);
+        }
+        result = sum/(v.size()-startIndex);
+    }
+    //cout << "Sum: " << sum << endl;
+    //cout << "Result: " << result << endl;
+    return result;
 }   
+
+/*
+int main() {
+    parseData("2008CompilationData.csv",3);
+    return 0;
+}*/
