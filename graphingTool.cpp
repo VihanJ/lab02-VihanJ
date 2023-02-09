@@ -71,7 +71,7 @@ int main() {
   */ 
 
     /* Deliverable 4 */
-    cout << "smoothed" << endl;
+    //cout << "smoothed" << endl;
     scatterPlot(smoothedData[0], smoothedData[1], "Age (ma)", "d18O", "d18O Smoothed vs Age (ma)", "blue");
     scatterPlot(smoothedData[0], smoothedData[2], "Age (ma)", "d13C", "d13C Smoothed vs Age (ma)", "red");
 
@@ -79,7 +79,7 @@ int main() {
     vector<vector<double>> filteredData = filterData(data, MIN_AGE, MAX_AGE);
 
     /* Deliverable 6 */
-    cout << "filtered" << endl;
+    //cout << "filtered" << endl;
     scatterPlot(filteredData[0], filteredData[1], "Age (ma)", "d18O", "d18O Filtered vs Age (ma)", "blue");
     scatterPlot(filteredData[0], filteredData[2], "Age (ma)", "d13C", "d13C Filtered vs Age (ma)", "red");
    return 0;   

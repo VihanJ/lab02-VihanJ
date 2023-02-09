@@ -29,7 +29,7 @@ vector<vector<double>> parseData(const string pathToFile, size_t numCol) {
         cerr << "ERROR: " << pathToFile << " did not open correctly";
         exit(2);
     } else {
-        cout << "opened file" << endl;
+        //cout << "opened file" << endl;
     }
 
     int i;
@@ -61,9 +61,9 @@ vector<vector<double>> parseData(const string pathToFile, size_t numCol) {
     }
     csv.close();
     if (csv.eof()) {
-        cout << "Read File Successfully" << endl;
+        //cout << "Read File Successfully" << endl;
     } else {
-        cerr << "Error reading file" << endl;
+        //cerr << "Error reading file" << endl;
         exit(2);
     }
 
@@ -88,17 +88,12 @@ vector<vector<double>> smoothData(vector<vector<double>>& rawData, size_t window
     //creates vector<vector<double>> same size as rawData
     vector<vector<double>> result(rawData);
 
-    cout << rawData.size() << " " << rawData.at(0).size() << endl;
-    cout << result.size() << " " << result.at(0).size() << endl;
-    cout << result.at(0).at(0) << endl;
-
-
     double value;
     for (int c = 0; c < rawData.size(); c++) {
         //computing averages with standard window lengths
-        for (int i = 0; i < rawData.at(0).size(); i++) {
+        for (int i = 0; i < 100/*rawData.at(0).size()*/; i++) {
             value = getAvgNextNValues(rawData.at(c),i,windowSize);
-            //cout << value << " "
+            //cout << value << " ";
             result.at(c).at(i) = value;    
         }
         //cout << endl;
@@ -113,7 +108,7 @@ vector<vector<double>> smoothData(vector<vector<double>>& rawData, size_t window
  * @param[in] minAge the minAge as an int
  * @param[in] maxAge the minAge as an int
  */
-vector<vector<double>> filterData(vector<vector<double>>& rawData, int minAge, int maxAge) {
+vector<vector<double>> filterData(vector<vector<double>>&  rawData, int minAge, int maxAge) {
     if(rawData.size() == 0){ 
         cerr << "No data provided to the filter data function" << endl;
         exit(2);
@@ -155,9 +150,7 @@ vector<vector<double>> filterData(vector<vector<double>>& rawData, int minAge, i
     avg = (3.0 + 4.0 + 5.5) / 3 = 4.16
 
  * @Example 2:  
-    v = [1.0,2.0,3.0,4.0,5.5]
-    startIndex = 3
-    windowLength = 3
+    v = [1.0,2.0,3.0,4.0,5.5]    windowLength = 3
     avg = (4.0 + 5.5) / 2 = 9.5
  */
 double getAvgNextNValues(vector<double> const& v, size_t startIndex , size_t windowLength){ 
