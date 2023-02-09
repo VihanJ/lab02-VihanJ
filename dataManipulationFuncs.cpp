@@ -91,10 +91,10 @@ vector<vector<double>> smoothData(vector<vector<double>>& rawData, size_t window
     double value;
     for (int c = 0; c < rawData.size(); c++) {
         //computing averages with standard window lengths
-        for (int i = 0; i < rawData.at(0).size(); i++) {
+        for (int i = 0; i < rawData.at(c).size(); i++) {
             value = getAvgNextNValues(rawData.at(c),i,windowSize);
-            //cout << value << " ";
             result.at(c).at(i) = value;    
+            //cout << result.at(c).at(i) << " ";
         }
         //cout << endl;
     }
